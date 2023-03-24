@@ -13,7 +13,7 @@ export default {
     };
   },
   methods: {
-    plus(e) {
+    plus() {
       this.count++;
       console.log(this.$store.state.tasks);
       console.log(this.$store.getters.tasksLength);
