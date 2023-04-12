@@ -1,9 +1,18 @@
 <script>
 import Custom from './components/Custom.vue';
+import BX24Wrapper from './assets/libs/bx24-wrapper.js';
+import {
+  mdiWeatherSunny,
+  mdiWeatherNight,
+} from '@mdi/js';
 
 export default {
   data() {
     return {
+      // Icons
+      mdiWeatherSunny,
+      mdiWeatherNight,
+      
       isMounted: false,
       themeFromLocalStorage: this.setTheme(),
       themeObject: {
@@ -22,19 +31,20 @@ export default {
 
   },
   mounted() {
-    setTimeout(() => {
-      this.isMounted = true;
-    }, 1000);
     try {
       BX24.init(() => {
-        BX24.callMethod("user.get", {}, (res) => {
-          this.user = res.data()[0];
-          console.log(Object.entries(this.user));
-          for (let [field, value] of Object.entries(this.user)) {
-            console.log('Pole ', field);
-            console.log('Val ', value);
-          }
-        });
+        const bx24 = new BX24Wrapper();
+
+        bx24.callBatch([['user.get', {}], ['department.get', {}]])
+          .then(res => {
+            this.users = res[0];
+            this.departments = res[1];
+            console.log(res);
+          })
+          .catch(e => {
+            console.warn(e);
+          })
+          .finally(() => { this.isMounted = true; })
 
       })
     } catch (error) {
@@ -107,7 +117,7 @@ export default {
           </v-btn>
         </router-link>
 
-        <v-btn :prepend-icon="theme === 'light' ? 'mdi-weather-sunny' : 'mdi-weather-night'" @click="changeTheme">Toggle
+        <v-btn :prepend-icon="theme === 'light' ? mdiWeatherSunny : mdiWeatherNight" @click="changeTheme">Toggle
           Theme
         </v-btn>
       </v-app-bar>
@@ -131,6 +141,10 @@ export default {
     </v-app>
 </template>
 
-<style scoped>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Raleway:wght@400;700&display=swap');
 
+body {
+  font-family: 'Raleway', sans-serif;
+}
 </style>
