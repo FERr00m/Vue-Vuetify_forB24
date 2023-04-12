@@ -1,6 +1,6 @@
 <script>
 import Custom from './components/Custom.vue';
-import BX24Wrapper from './assets/libs/bx24-wrapper.js';
+import BX24Wrapper from './assets/bx24-wrapper.js';
 import {
   mdiWeatherSunny,
   mdiWeatherNight,
